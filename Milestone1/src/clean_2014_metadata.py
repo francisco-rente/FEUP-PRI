@@ -16,38 +16,56 @@ def clean_description(description):
 
 
 def clean_metadata(metadata):
+    if verbose_mode():
+        print("--------------------")
+        print("Cleaning metadata")
+
     initial_shape = metadata.shape
+
+    metadata = metadata.drop_duplicates(subset=['asin'])
+
+    if verbose_mode():
+        print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " duplicate asin")
+
     metadata = metadata[metadata['price'] > 0]
 
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    if verbose_mode():
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with price <= 0")
 
     metadata = metadata[metadata['imUrl'] != 'no reference']
 
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    if verbose_mode():
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no reference image")
 
     metadata = metadata[metadata['imUrl'].str.contains('http')]
 
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    if verbose_mode():
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no http in image url")
 
     metadata = metadata[metadata['description'] != 'no description']
 
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    if verbose_mode():
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no description")
 
     # metadata = metadata[metadata['price'].notna()]
+
     metadata["description"] = metadata["description"].apply(clean_description)
 
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    if verbose_mode():
         print("Cleaned description")
 
     final_shape = metadata.shape
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    if verbose_mode():
         print("Removed " + str(initial_shape[0] - final_shape[0]) + " rows")
 
+    if verbose_mode():
+        print("--------------------")
+
     return metadata
+
+
+def verbose_mode():
+    return len(sys.argv) > 1 and sys.argv[1] == "-v"
 
 
 def parse_metadata():
@@ -76,6 +94,7 @@ def parse_metadata():
 
 
 def print_final_shape(metadata):
+    print("--------------------")
     print("Cleaned metadata shape: " + str(metadata.shape[0]) + " rows, " + str(metadata.shape[1]) + " columns")
     # print NA values in price
     print("Number of NA values in price: " + str(metadata['price'].isna().sum()))
@@ -85,6 +104,7 @@ def print_final_shape(metadata):
     print("Number of imUrl == no reference: " + str((metadata['imUrl'] == 'no reference').sum()))
     # print no of imUrl not containing http
     print("Number of imUrl not containing http: " + str((~metadata['imUrl'].str.contains('http')).sum()))
+    print("--------------------")
 
 
 def main():
@@ -102,12 +122,17 @@ def main():
         print_final_shape(metadata)
 
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
-        metadata.describe()
+        print("Describing metadata")
+        print(metadata.describe(include='all'))
 
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
         print("Saving cleaned metadata to file")
 
     metadata.to_csv('../datasets/cleaned_2014_metadata.csv', index=False)
+
+    # metadata = pd.read_csv('../datasets/cleaned_2014_metadata.csv')
+    # if len(sys.argv) > 1 and sys.argv[1] == "-v":
+    #     print(metadata.shape[0])
 
 
 if __name__ == "__main__":
