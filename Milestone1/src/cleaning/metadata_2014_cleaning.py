@@ -84,23 +84,7 @@ def verbose_mode():
     return len(sys.argv) > 1 and sys.argv[1] == "-v"
 
 
-def parse_metadata():
-    metadata_list = []
-    with open('../../datasets/meta_Kindle_Store_2014.json', 'r') as f:
-        lines = f.readlines()
-        for line in lines:
-            dic = ast.literal_eval(line)
-            metadata_list.append({'asin': dic['asin'],
-                                  'price': dic['price'] if 'price' in dic else None,
-                                  'imgUrl': dic['imUrl'] if 'imUrl' in dic else 'no reference',
-                                  'description': dic['description'] if 'description' in dic else 'no description'})
 
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
-        print("Metadata file contains " + str(len(metadata_list)) + " objects")
-
-    # transform list of dictionaries into dataframe
-    metadata = pd.DataFrame(metadata_list)
-    return metadata
 
 
 def print_final_shape(metadata):
@@ -117,6 +101,10 @@ def print_final_shape(metadata):
     print("--------------------")
 
 
+def read_metadata():
+    metadata = pd.read_csv('../../datasets/raw_data/metadata_2014.csv', converters={'description': ast.literal_eval})
+    return metadata
+
 
 def save_to_csv(metadata):
     if not os.path.exists('../../datasets/cleaned_data'):
@@ -130,7 +118,7 @@ def main():
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
         print("Reading metadata from file")
 
-    metadata = parse_metadata()
+    metadata = read_metadata()
 
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
         print("Parsed metadata")

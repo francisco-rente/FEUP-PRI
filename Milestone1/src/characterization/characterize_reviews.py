@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 def main():
     # Date histogram code
-    df = pd.read_csv('../../datasets/cleaned_Kindle_Reviews.csv')
+    df = pd.read_csv('../../datasets/cleaned_data/cleaned_Kindle_Reviews.csv')
     df_dates = df.copy()
     # df_dates = pd.to_datetime(df['unixReviewTime'],unit='s')
     df_dates['unixReviewTime'] = pd.to_datetime(df_dates['unixReviewTime'], unit='s')
