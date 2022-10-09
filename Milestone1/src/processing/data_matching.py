@@ -6,7 +6,7 @@ import pandas as pd
 def main():
     # Read both dataframes
     print("READING METADATA JSON...")
-    dfmeta = pd.read_json('../datasets/meta_Kindle_Store_2018.json', lines=True)
+    dfmeta = pd.read_json('../../datasets/meta_Kindle_Store_2018.json', lines=True)
     print("READING REVIEWS JSON...")
     dfreviews = pd.read_json('../datasets/reviews_Kindle_Store_2014.json', lines=True)
     print("READ ALL DATAFRAMES... READY FOR MATCHING")
