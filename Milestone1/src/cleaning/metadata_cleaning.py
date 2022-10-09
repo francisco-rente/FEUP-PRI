@@ -150,41 +150,51 @@ def clean_attributes_related_to_2014(metadata):
     #     print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " duplicate asin")
 
     print(metadata.head())
-    metadata = metadata[metadata['price'] > 0]
+    current_shape = metadata.shape
+    # metadata = metadata[metadata['price'] >= 0]
+    # metadata = metadata[metadata['price'].notna()]
+    #
+    # if verbose_mode() and current_shape[0] != metadata.shape[0]:
+    #     print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with price not attributed")
 
-    if verbose_mode() and initial_shape[0] != metadata.shape[0]:
-        print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with price <= 0")
-
+    current_shape = metadata.shape
     metadata = metadata[metadata['imgUrl'] != 'no reference']
 
-    if verbose_mode() and initial_shape[0] != metadata.shape[0]:
+    if verbose_mode() and current_shape[0] != metadata.shape[0]:
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no reference image")
 
+    current_shape = metadata.shape
     metadata = metadata[metadata['imgUrl'].str.contains('http')]
 
-    if verbose_mode() and initial_shape[0] != metadata.shape[0]:
+    if verbose_mode() and current_shape[0] != metadata.shape[0]:
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no http in image url")
 
-    metadata = metadata[metadata['description'] != 'no description']
+    current_shape = metadata.shape
+    metadata = metadata[metadata['overall'] >= 0]
 
-    if verbose_mode() and initial_shape[0] != metadata.shape[0]:
-        print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no description")
+    if verbose_mode() and current_shape[0] != metadata.shape[0]:
+        print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with overall < 0")
 
-    # metadata = metadata[metadata['price'].notna()]
+    # current_shape = metadata.shape
+    # metadata = metadata[metadata['description'] != 'no description']
+    #
+    # if verbose_mode() and current_shape[0] != metadata.shape[0]:
+    #     print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no description")
 
     metadata["description"] = metadata["description"].apply(clean_description)
 
     if verbose_mode():
         print("Cleaned description")
 
+    current_shape = metadata.shape
     rex = re.compile(r'<href.*?>(.*?)</href>|<a.*?>(.*?)</a>|<ul.*?>(.*?)</ul>', re.S | re.M)  # rex.match(data)
     metadata = metadata[metadata['description'].apply(lambda x: rex.match(x) is None)]
 
-    if verbose_mode() and initial_shape[0] != metadata.shape[0]:
+    if verbose_mode() and current_shape[0] != metadata.shape[0]:
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with html tags in description")
 
     final_shape = metadata.shape
-    if verbose_mode() and initial_shape[0] != metadata.shape[0]:
+    if verbose_mode():
         print("Removed " + str(initial_shape[0] - final_shape[0]) + " rows")
 
     if verbose_mode():
@@ -202,11 +212,15 @@ def main():
     print("READING FILE FROM " + path)
 
     df = pd.read_csv(path)
+    print("SHAPE BEFORE CLEANING: " + str(df.shape))
 
     df = parse_through_data(df)
 
     notvals = functools.reduce(operator.add, [df[c].isna().sum() for c in df.columns])
     print("Number of NaN values: " + str(notvals))
+
+    print("SHAPE AFTER CLEANING: " + str(df.shape))
+
 
     directory = "../../datasets/cleaned_data"
     if not os.path.exists(directory):

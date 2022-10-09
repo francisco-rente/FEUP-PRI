@@ -34,6 +34,7 @@ def main():
     df_product_rating = df_product_rating.groupby('asin').mean()
     dfmeta = dfmeta.merge(df_product_rating, on='asin', how='left')
 
+    print("ROWS AFTER MATCHING " + str(dfmeta.shape[0]))
     print("SAVING DATAFRAMES ON CSV FILES")
     dfmeta.to_csv('../../datasets/merged_data/raw_unmerged_metadata.csv', index=False)
     dfreviews.to_csv('../../datasets/merged_data/raw_reviews.csv', index=False)
