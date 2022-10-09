@@ -86,11 +86,12 @@ def parse_metadata():
         lines = f.readlines()
         count = 0
         for line in lines:
-            count += 1
+
+
             # if len(sys.argv) > 1 and sys.argv[1] == "-v" and count % 10000 == 0:
             #     print("Parsed " + str(count) + " lines")
-            if count == 1000:
-                break
+
+
             dic = ast.literal_eval(line)
             metadata_list.append({'asin': dic['asin'],
                                   'price': dic['price'] if 'price' in dic else None,
