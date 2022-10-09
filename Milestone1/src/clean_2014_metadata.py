@@ -87,8 +87,10 @@ def parse_metadata():
         count = 0
         for line in lines:
 
+
             # if len(sys.argv) > 1 and sys.argv[1] == "-v" and count % 10000 == 0:
             #     print("Parsed " + str(count) + " lines")
+
 
             dic = ast.literal_eval(line)
             metadata_list.append({'asin': dic['asin'],
