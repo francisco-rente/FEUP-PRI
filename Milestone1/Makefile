@@ -26,9 +26,10 @@ unzip:
 #		exit 1; \
 #	fi
 
-# convert_json_to_csv:
-#	@echo "Converting json to csv..."
-#	@python3 src/convert_json_to_csv.py
+convert_json_to_csv:
+	@echo "Converting json to csv..."
+	@python3 src/metadata_conversion.py
+	@split -l 1000000 datasets/metadata.csv datasets/metadata_split_
 
 
 # run data preprocessing notebook
