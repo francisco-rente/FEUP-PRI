@@ -19,8 +19,7 @@ def save_to_csv(df):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    df.to_csv('../../datasets/cleaned_data/cleaned_Kindle_Reviews.csv', index=False,
-              quoting=csv.QUOTE_NONE, escapechar='|')  # save to csv
+    df.to_csv('../../datasets/cleaned_data/cleaned_Kindle_Reviews.csv', sep=";", index=False, escapechar='|')  # save to csv
 
 
 def clean_reviews(df):
