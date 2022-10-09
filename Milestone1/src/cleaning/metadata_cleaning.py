@@ -51,7 +51,7 @@ def reorganize_data(data_frame):
     data_frame = data_frame.rename(columns={'description_y': 'description'})
     data_frame = data_frame.rename(columns={'price_y': 'price'})
 
-    return data_frame[['asin', 'title', 'brand', 'category', 'publication_date', 'no_pages', 'description', 'price', 'imgUrl']]
+    return data_frame[['asin', 'title', 'brand', 'category', 'publication_date', 'no_pages', 'description', 'price', 'imgUrl', 'overall']]
 
 
 def trim_data(data_frame):
