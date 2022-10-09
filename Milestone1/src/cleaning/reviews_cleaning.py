@@ -1,3 +1,4 @@
+import ast
 import csv
 import os
 import pandas as pd
@@ -19,7 +20,19 @@ def save_to_csv(df):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    df.to_csv('../../datasets/cleaned_data/cleaned_Kindle_Reviews.csv', sep=";", index=False, escapechar='|')  # save to csv
+    df.to_csv('../../datasets/cleaned_data/cleaned_Kindle_Reviews.csv', sep=";", index=False,
+              escapechar='|')  # save to csv
+
+
+def tranform_helpful(df):
+    # transform helpful column to percentage
+    print(df.dtypes)
+    df['helpful_ratio'] = df['helpful'].apply(
+        lambda x: float(x[0]) / x[1] if x[1] != 0 else 0)
+    df['visualization'] = df['helpful'].apply(lambda x: x[1])
+    df = df.drop(columns=['helpful'])
+
+    return df
 
 
 def clean_reviews(df):
@@ -31,6 +44,8 @@ def clean_reviews(df):
     new_df = df.loc[df.astype(str).drop_duplicates().index]  # complicated code because of "helpful" being a list
     len_now = len(new_df.index)
     print("Removed duplicated lines") if len_now != len_before else print("Found no duplicated lines")
+
+    new_df = tranform_helpful(new_df)  # transform helpful column to percentage
 
     return new_df
 
