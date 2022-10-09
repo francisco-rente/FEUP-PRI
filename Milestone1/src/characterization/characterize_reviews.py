@@ -36,7 +36,8 @@ def main():
 
     # text size graph
     df["reviewText_size"] = df["reviewText"].str.len()
-    word_number_plot = df["reviewText_size"].value_counts().sort_index().plot()
+    word_number_plot = df["reviewText_size"].value_counts().sort_index().plot(title="Review text size")
+    word_number_plot.set_ylabel("no of words")
     word_number_plot.set_xlabel("Review text word count")
     plt.savefig(directory + '/' + "text_size_plot.png")
     plt.show()
