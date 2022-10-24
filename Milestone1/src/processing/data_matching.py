@@ -6,9 +6,9 @@ import pandas as pd
 def main():
     # Read both dataframes
     print("READING METADATA JSON...")
-    dfmeta = pd.read_json('../../datasets/meta_Kindle_Store_2018.json', lines=True)
+    dfmeta = pd.read_json('./datasets/meta_Kindle_Store_2018.json', lines=True)
     print("READING REVIEWS JSON...")
-    dfreviews = pd.read_json('../../datasets/Kindle_Store_5.json', lines=True)
+    dfreviews = pd.read_json('./datasets/reviews_Kindle_Store_2014.json', lines=True)
     print("READ ALL DATAFRAMES... READY FOR MATCHING")
 
     print("PRODUCTS DATAFRAME:" + str(dfmeta.shape[0]) + "," + str(dfmeta.shape[1]))
@@ -36,8 +36,8 @@ def main():
 
     print("ROWS AFTER MATCHING " + str(dfmeta.shape[0]))
     print("SAVING DATAFRAMES ON CSV FILES")
-    dfmeta.to_csv('../../datasets/merged_data/raw_unmerged_metadata.csv', index=False)
-    dfreviews.to_csv('../../datasets/merged_data/raw_reviews.csv', index=False)
+    dfmeta.to_csv('./datasets/merged_data/raw_unmerged_metadata.csv', index=False)
+    dfreviews.to_csv('./datasets/merged_data/raw_reviews.csv', index=False)
 
     return 0
 

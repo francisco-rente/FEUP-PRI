@@ -5,7 +5,7 @@ import pandas as pd
 
 def parse_metadata():
     metadata_list = []
-    with open('../../datasets/meta_Kindle_Store_2014.json', 'r') as f:
+    with open('./datasets/meta_Kindle_Store_2014.json', 'r') as f:
         lines = f.readlines()
         for line in lines:
             dic = ast.literal_eval(line)
@@ -22,7 +22,7 @@ def parse_metadata():
 
 
 def save_to_file(metadata):
-    metadata.to_csv('../../datasets/cleaned_data/valid_metadata_2014.csv', index=False)
+    metadata.to_csv('./datasets/cleaned_data/valid_metadata_2014.csv', index=False)
 
 
 def main():

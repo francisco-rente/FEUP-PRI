@@ -102,7 +102,7 @@ def drop_bad_rows(data_frame):
 
 def get_path():
     data_set = "raw_metadata.csv"
-    directory = "../../datasets/merged_data"
+    directory = "./datasets/merged_data"
     # path = os.path.join(directory, data_set)
     # if not os.path.exists(path):
     #   print("Error:" + path + " not found")
@@ -164,7 +164,7 @@ def clean_attributes_related_to_2014(metadata):
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no reference image")
 
     current_shape = metadata.shape
-    metadata = metadata[metadata['imgUrl'].str.contains('http')]
+    #metadata = metadata[metadata['imgUrl'].str.contains('http')]
 
     if verbose_mode() and current_shape[0] != metadata.shape[0]:
         print("Removed " + str(initial_shape[0] - metadata.shape[0]) + " rows with no http in image url")
@@ -222,7 +222,7 @@ def main():
     print("SHAPE AFTER CLEANING: " + str(df.shape))
 
 
-    directory = "../../datasets/cleaned_data"
+    directory = "./datasets/cleaned_data"
     if not os.path.exists(directory):
         os.makedirs(directory)
     df.to_csv(os.path.join(directory, "refined_metadata.csv"), index=False)

@@ -11,11 +11,11 @@ def merge_metadata(df1, df2):
 
 def main():
     # Read both dataframes
-    df2018 = pd.read_csv('../../datasets/merged_data/raw_unmerged_metadata.csv')
-    df2014 = pd.read_csv('../../datasets/cleaned_data/valid_metadata_2014.csv')
+    df2018 = pd.read_csv('./datasets/merged_data/raw_unmerged_metadata.csv')
+    df2014 = pd.read_csv('./datasets/cleaned_data/valid_metadata_2014.csv')
 
     df_metadata = merge_metadata(df2018, df2014)
-    df_metadata.to_csv('../../datasets/merged_data/raw_metadata.csv', index=False)
+    df_metadata.to_csv('./datasets/merged_data/raw_metadata.csv', index=False)
     return 0
 
 

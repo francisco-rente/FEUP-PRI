@@ -1,7 +1,7 @@
 DATASETS_DIR = "../datasets"
 2014_META_DATA_FILE = "meta_Kindle_Store_2014.json"
 2018_META_DATA_FILE = "meta_Kindle_Store_2018.json"
-REVIEWS_FILE = "Kindle_Store_5.json"
+REVIEWS_FILE = "reviews_Kindle_Store_2014.json"
 
 
 # general steps
@@ -39,7 +39,7 @@ help:
 	@echo "characterize_reviews: characterize the reviews dataset"
 	@echo "characterize_metadata: characterize the metadata dataset"
 
-all: check_datasets match_datasets clean_data process_data characterize_reviews characterize_metadata
+all: check_datasets match_datasets clean_data characterize_data
 
 check_datasets:
 	# verify that the datasets directory exists
@@ -53,24 +53,31 @@ check_datasets:
 
 
 match_datasets: check_datasets
-	python3 match_datasets.py
+	python3 src/processing/match_datasets.py
 	# check if the matched datasets file exists
 
-clean_data: clean_reviews clean_metadata
+# Converts 2014 metadata to readable csv
+# Cleans 2014 metadata
+# Merges 2018 metadata with 2014 metadata
+# Creates a raw metadata file
+merge_cleaning:
+	python3 src/processing/metadata_2014_converison.py
+	python3 src/processing/metadata_merge.py
 
-process_data: clean_data
-	python3 process_data.py
-	# check if the processed datasets file exists
+
+clean_data: clean_reviews clean_metadata
 
 characterize_data: characterize_reviews characterize_metadata
 	python3 characterize_data.py
 
+# Cleans the reviews metadata and creates the refined_reviews.csv
+# Also creates the refined_reviewers.csv
 clean_reviews:
-	python3 clean_Kindle_reviews.py
+	python3 src/cleaning/reviews
 	# check if the clean dataset file exists
 
 clean_metadata:
-	python3 clean_Kindle_metadata.py
+	python3 src/cleaning/metadata_cleaning.py
 	# check if the clean dataset file exists
 
 characterize_metadata:
@@ -82,5 +89,4 @@ characterize_reviews:
 	# check if the reviews characterization file exists
 
 
-clean:
 	

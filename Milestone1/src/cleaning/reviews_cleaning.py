@@ -4,11 +4,11 @@ import os
 import pandas as pd
 
 
-def read_json():
-    data_set = "Kindle_Store_5.json"
-    directory = "../../datasets"
+def read_csv():
+    data_set = "raw_reviews.csv"
+    directory = "./datasets/merged_data/"
     path = os.path.join(directory, data_set)
-    df = pd.read_json(path, lines=True)  # read dataset
+    df = pd.read_csv(path)  # read dataset
     return df
 
 
@@ -16,11 +16,11 @@ def save_to_csv(df):
     print("Saving cleaned dataset")
 
     # check if directory exists
-    directory = "../../datasets/cleaned_data/"
+    directory = "./datasets/cleaned_data/"
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    df.to_csv('../../datasets/cleaned_data/cleaned_Kindle_Reviews.csv', sep=";", index=False,
+    df.to_csv('./datasets/cleaned_data/refined_reviews.csv', sep=";", index=False,
               escapechar='|')  # save to csv
 
 
@@ -28,7 +28,7 @@ def tranform_helpful(df):
     # transform helpful column to percentage
     print(df.dtypes)
     df['helpful_ratio'] = df['helpful'].apply(
-        lambda x: float(x[0]) / x[1] if x[1] != 0 else 0)
+        lambda x: float(ast.literal_eval(x)[0]) / (ast.literal_eval(x))[1] if (ast.literal_eval(x))[1] != 0 else 0)
     df['visualization'] = df['helpful'].apply(lambda x: x[1])
     df = df.drop(columns=['helpful'])
 
@@ -50,11 +50,26 @@ def clean_reviews(df):
     return new_df
 
 
+def create_reviewer_csv(df):
+    # create a csv file with all the unique reviewers
+    df2 = df[['reviewerID','reviewerName']]
+    df2 = df2.drop_duplicates()
+    
+    df2.to_csv('./datasets/cleaned_data/refined_reviewers.csv', sep=";", index=False,
+              escapechar='|')  # save to csv
+    
+    df = df.drop(columns=['reviewerName'])
+    
+    return df
+    
+    
+
 def main():
     print("Starting cleaning Reviews dataset")
 
-    df = read_json()
+    df = read_csv()
     new_df = clean_reviews(df)
+    new_df = create_reviewer_csv(new_df)
     save_to_csv(new_df)
 
     print("Finished cleaning Reviews dataset")
