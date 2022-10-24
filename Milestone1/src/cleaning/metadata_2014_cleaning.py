@@ -1,12 +1,14 @@
 import ast
-import json
 import html
+import os
 import sys
 import unicodedata as ud
 import re
 
 import pandas as pd
 
+
+# OUTPUTS cleaned_2014_metadata
 
 def clean_description(description):
     description = ud.normalize('NFKD', description).encode('ascii', 'ignore').decode('ascii')
@@ -17,6 +19,8 @@ def clean_description(description):
     # remove LS and PS
     description = description.replace(u'\u2028', ' ')
     description = description.replace(u'\u2029', ' ')
+    description = description.replace('""', '"')
+    description = description.replace('\n', ' ')
 
     return description
 
@@ -60,7 +64,7 @@ def clean_metadata(metadata):
     if verbose_mode():
         print("Cleaned description")
 
-    rex = re.compile(r'<href.*?>(.*?)</href>|<a.*?>(.*?)</a>|<ul.*?>(.*?)</ul>', re.S | re.M) # rex.match(data)
+    rex = re.compile(r'<href.*?>(.*?)</href>|<a.*?>(.*?)</a>|<ul.*?>(.*?)</ul>', re.S | re.M)  # rex.match(data)
     metadata = metadata[metadata['description'].apply(lambda x: rex.match(x) is None)]
 
     if verbose_mode() and initial_shape[0] != metadata.shape[0]:
@@ -80,30 +84,7 @@ def verbose_mode():
     return len(sys.argv) > 1 and sys.argv[1] == "-v"
 
 
-def parse_metadata():
-    metadata_list = []
-    with open('../datasets/meta_Kindle_Store_2014.json', 'r') as f:
-        lines = f.readlines()
-        count = 0
-        for line in lines:
 
-
-            # if len(sys.argv) > 1 and sys.argv[1] == "-v" and count % 10000 == 0:
-            #     print("Parsed " + str(count) + " lines")
-
-
-            dic = ast.literal_eval(line)
-            metadata_list.append({'asin': dic['asin'],
-                                  'price': dic['price'] if 'price' in dic else None,
-                                  'imgUrl': dic['imUrl'] if 'imUrl' in dic else 'no reference',
-                                  'description': dic['description'] if 'description' in dic else 'no description'})
-
-    if len(sys.argv) > 1 and sys.argv[1] == "-v":
-        print("Metadata file contains " + str(len(metadata_list)) + " objects")
-
-    # transform list of dictionaries into dataframe
-    metadata = pd.DataFrame(metadata_list)
-    return metadata
 
 
 def print_final_shape(metadata):
@@ -120,11 +101,24 @@ def print_final_shape(metadata):
     print("--------------------")
 
 
+def read_metadata():
+    metadata = pd.read_csv('../../datasets/raw_data/metadata_2014.csv', converters={'description': ast.literal_eval})
+    return metadata
+
+
+def save_to_csv(metadata):
+    if not os.path.exists('../../datasets/cleaned_data'):
+        os.makedirs('../../datasets/cleaned_data')
+
+    metadata.to_csv('../../datasets/cleaned_data/cleaned_2014_metadata.csv', index=False)
+
 def main():
+    print("Starting metadata cleaning")
+
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
         print("Reading metadata from file")
 
-    metadata = parse_metadata()
+    metadata = read_metadata()
 
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
         print("Parsed metadata")
@@ -139,13 +133,10 @@ def main():
         print(metadata.describe(include='all'))
 
     if len(sys.argv) > 1 and sys.argv[1] == "-v":
-        print("Saving cleaned metadata to file")
+        print("Saving cleaned metadata to file cleaned_2014_metadata.csv")
 
-    metadata.to_csv('../datasets/cleaned_2014_metadata.csv', index=False)
-
-    # metadata = pd.read_csv('../datasets/cleaned_2014_metadata.csv')
-    # if len(sys.argv) > 1 and sys.argv[1] == "-v":
-    #     print(metadata.shape[0])
+    save_to_csv(metadata)
+    print("Saved cleaned metadata to file cleaned_2014_metadata.csv")
 
 
 if __name__ == "__main__":

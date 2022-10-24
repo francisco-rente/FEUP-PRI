@@ -1,42 +1,86 @@
-# Define variables for data set files and scripts
-
-DATA_DIR := datasets
-
-# Check for files
-# .PHONY: all
+DATASETS_DIR = "../datasets"
+2014_META_DATA_FILE = "meta_Kindle_Store_2014.json"
+2018_META_DATA_FILE = "meta_Kindle_Store_2018.json"
+REVIEWS_FILE = "Kindle_Store_5.json"
 
 
-#help:
-#	@echo "make help"
-#	@echo "make all"
-#	@echo "make clean"
-#   @echo "make data"
+# general steps
 
-# unzip file and remove zip file
-unzip:
-	unzip
+# A BIT CONFUSING RIGHT NOW
 
+# metadata_2014_cleaning
+# takes meta_Kindle_Store_2014.json -> cleaned_2014_metadata.csv
 
-#checkdatasets:
-#	@echo "Checking for datasets..."
-#	if(stat -c "%n %s" datasets/*.csv && stat -c "%n %s" datasets/*.json); then \
-#		echo "Datasets found!"; \
-#	else \
-#		echo "Datasets not found!"; \
-#		exit 1; \
-#	fi
+# reviews_cleaning
+# takes Kindle_Store_5.json -> cleaned_reviews.csv
 
-convert_json_to_csv:
-	@echo "Converting json to csv..."
-	@python3 src/metadata_conversion.py
-	@split -l 1000000 datasets/metadata.csv datasets/metadata_split_
+# metadata_2018_cleaning
+# takes meta_Kindle_Store_2018.json -> raw_metadata.csv
+
+# data_matching
+# takes reviews_Kindle_Store_2014.csv (HOW?), meta_Kindle_Store_2018.json -> raw_unmerged_metadata.csv and raw_reviews.csv
+
+# metadata_merge
+# takes raw_unmerged_metadata.csv, cleaned_2014_metadata.csv -> raw_metadata.csv
+
+# FOR IT TO BE LINEAR, THE JSON READ (BECAUSE OF THE DESCRIPTION) in 2014 should be done separately.
+# data_match should be done after the read, maybe with a clean 2014 json?
 
 
-# run data preprocessing notebook
-# how to run notebooks: jupyter nbconvert --to notebook --execute mynotebook.ipynb
+help:
+	@echo "MAKE INSTRUCTIONS"
+	@echo "Ensure a virtual environment is activated"
+	@echo "check_datasets: check if the datasets are available"
+	@echo "match_datasets: match the datasets"
+	@echo "clean_data: clean both datasets"
+	@echo "clean_reviews: cleans reviews dataset"
+	@echo "clean_metadata: cleans metadata dataset"
+	@echo "process_data: process the datasets"
+	@echo "characterize_reviews: characterize the reviews dataset"
+	@echo "characterize_metadata: characterize the metadata dataset"
 
-# Generate graphs?
+all: check_datasets match_datasets clean_data process_data characterize_reviews characterize_metadata
+
+check_datasets:
+	# verify that the datasets directory exists
+	[ -d $(DATASETS_DIR) ] || (echo "ERROR: $(DATASETS_DIR) does not exist"; exit 1)
+	# verify that the 2014 meta data file exists
+	[ -f $(DATASETS_DIR)/$(2014_META_DATA_FILE) ] || (echo "ERROR: $(DATASETS_DIR)/$(2014_META_DATA_FILE) does not exist"; exit 1)
+	# verify that the 2018 meta data file exists
+	[ -f $(DATASETS_DIR)/$(2018_META_DATA_FILE) ] || (echo "ERROR: $(DATASETS_DIR)/$(2018_META_DATA_FILE) does not exist"; exit 1)
+	# verify that the reviews file exists
+	[ -f $(DATASETS_DIR)/$(REVIEWS_FILE) ] || (echo "ERROR: $(DATASETS_DIR)/$(REVIEWS_FILE) does not exist"; exit 1)
 
 
-# clean:
-#	@echo "Cleaning up..."
+match_datasets: check_datasets
+	python3 match_datasets.py
+	# check if the matched datasets file exists
+
+clean_data: clean_reviews clean_metadata
+
+process_data: clean_data
+	python3 process_data.py
+	# check if the processed datasets file exists
+
+characterize_data: characterize_reviews characterize_metadata
+	python3 characterize_data.py
+
+clean_reviews:
+	python3 clean_Kindle_reviews.py
+	# check if the clean dataset file exists
+
+clean_metadata:
+	python3 clean_Kindle_metadata.py
+	# check if the clean dataset file exists
+
+characterize_metadata:
+	python3 characterize_metadata.py
+	# check if the metadata characterization file exists
+
+characterize_reviews:
+	python3 characterize_reviews.py
+	# check if the reviews characterization file exists
+
+
+clean:
+	

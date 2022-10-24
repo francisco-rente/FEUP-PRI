@@ -4,21 +4,19 @@
 
 import pandas as pd
 
+
 def merge_metadata(df1, df2):
     return pd.merge(df1, df2, how='left', on='asin')
 
+
 def main():
-    #Read both dataframes
-    df2018 = pd.read_csv('../datasets/raw_unmerged_metadata.csv')
-    df2014 = pd.read_csv('../datasets/cleaned_2014_metadata.csv')
-
-
+    # Read both dataframes
+    df2018 = pd.read_csv('../../datasets/merged_data/raw_unmerged_metadata.csv')
+    df2014 = pd.read_csv('../../datasets/cleaned_data/valid_metadata_2014.csv')
 
     df_metadata = merge_metadata(df2018, df2014)
-    df_metadata.to_csv('../datasets/raw_metadata.csv', index=False)
+    df_metadata.to_csv('../../datasets/merged_data/raw_metadata.csv', index=False)
     return 0
-
-
 
 
 if __name__ == "__main__":
