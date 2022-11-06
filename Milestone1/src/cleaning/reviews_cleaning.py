@@ -20,8 +20,7 @@ def save_to_csv(df):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-    df.to_csv('./datasets/cleaned_data/refined_reviews.csv', sep=";", index=False,
-              escapechar='|')  # save to csv
+    df.to_csv('./datasets/cleaned_data/refined_reviews.csv',index=False)  # save to csv
 
 
 def tranform_helpful(df):
@@ -60,17 +59,15 @@ def create_reviewer_csv(df):
     
     df = df.drop(columns=['reviewerName'])
     
-    return df
+    return 
     
     
 
 def main():
     print("Starting cleaning Reviews dataset")
-
     df = read_csv()
-    new_df = clean_reviews(df)
-    new_df = create_reviewer_csv(new_df)
-    save_to_csv(new_df)
+    df = clean_reviews(df)
+    save_to_csv(df)
 
     print("Finished cleaning Reviews dataset")
 

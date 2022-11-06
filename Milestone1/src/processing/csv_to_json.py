@@ -6,17 +6,15 @@ def main():
     if(os.path.exists("datasets/cleaned_data/refined_metadata.csv")):
         df = pd.read_csv("datasets/cleaned_data/refined_metadata.csv")
         df.to_json("datasets/cleaned_data/refined_metadata.json")
+        df.to_json("../Milestone2/data/metadata.json")
         os.remove("datasets/cleaned_data/refined_metadata.csv")
         
     if(os.path.exists("datasets/cleaned_data/refined_reviews.csv")):
-        df = pd.read_csv("datasets/cleaned_data/refined_reviews.csv", sep=";")
+        df = pd.read_csv("datasets/cleaned_data/refined_reviews.csv")
         df.to_json("datasets/cleaned_data/refined_reviews.json")
+        df.to_json("../Milestone2/data/reviews.json")
         os.remove("datasets/cleaned_data/refined_reviews.csv")
         
-    if(os.path.exists("datasets/cleaned_data/refined_reviewers.csv")):
-        df = pd.read_csv("datasets/cleaned_data/refined_reviewers.csv", sep=";")
-        df.to_json("datasets/cleaned_data/refined_reviewers.json")
-        os.remove("datasets/cleaned_data/refined_reviewers.csv")
     
     return
 

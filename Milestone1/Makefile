@@ -1,4 +1,4 @@
-DATASETS_DIR = "../datasets"
+DATASETS_DIR = "/datasets"
 2014_META_DATA_FILE = "meta_Kindle_Store_2014.json"
 2018_META_DATA_FILE = "meta_Kindle_Store_2018.json"
 REVIEWS_FILE = "reviews_Kindle_Store_2014.json"
@@ -39,21 +39,10 @@ help:
 	@echo "characterize_reviews: characterize the reviews dataset"
 	@echo "characterize_metadata: characterize the metadata dataset"
 
-all: check_datasets match_datasets clean_data characterize_data csv_to_json 
+all:  match_datasets clean_data characterize_data csv_to_json 
 
-check_datasets:
-	# verify that the datasets directory exists
-	[ -d $(DATASETS_DIR) ] || (echo "ERROR: $(DATASETS_DIR) does not exist"; exit 1)
-	# verify that the 2014 meta data file exists
-	[ -f $(DATASETS_DIR)/$(2014_META_DATA_FILE) ] || (echo "ERROR: $(DATASETS_DIR)/$(2014_META_DATA_FILE) does not exist"; exit 1)
-	# verify that the 2018 meta data file exists
-	[ -f $(DATASETS_DIR)/$(2018_META_DATA_FILE) ] || (echo "ERROR: $(DATASETS_DIR)/$(2018_META_DATA_FILE) does not exist"; exit 1)
-	# verify that the reviews file exists
-	[ -f $(DATASETS_DIR)/$(REVIEWS_FILE) ] || (echo "ERROR: $(DATASETS_DIR)/$(REVIEWS_FILE) does not exist"; exit 1)
-
-
-match_datasets: check_datasets
-	python3 src/processing/match_datasets.py
+match_datasets: 
+	python3 src/processing/data_matching.py
 	# check if the matched datasets file exists
 
 # Converts 2014 metadata to readable csv
@@ -73,7 +62,7 @@ characterize_data: characterize_reviews characterize_metadata
 # Cleans the reviews metadata and creates the refined_reviews.csv
 # Also creates the refined_reviewers.csv
 clean_reviews:
-	python3 src/cleaning/reviews
+	python3 src/cleaning/reviews_cleaning.py
 	# check if the clean dataset file exists
 
 clean_metadata:
