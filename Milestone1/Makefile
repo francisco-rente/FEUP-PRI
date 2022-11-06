@@ -39,7 +39,7 @@ help:
 	@echo "characterize_reviews: characterize the reviews dataset"
 	@echo "characterize_metadata: characterize the metadata dataset"
 
-all: check_datasets match_datasets clean_data characterize_data
+all: check_datasets match_datasets clean_data characterize_data csv_to_json 
 
 check_datasets:
 	# verify that the datasets directory exists
@@ -89,4 +89,5 @@ characterize_reviews:
 	# check if the reviews characterization file exists
 
 
-	
+csv_to_json:
+	python3 src/processing/csv_to_json.py
