@@ -3,18 +3,36 @@
 # Reviews file path -> data/reviews.json
 # Metadata file path -> data/metadata.json
 
-#Importing important data
+# Importing important data
 import pandas as pd
 
+# Reads the reviews and metadata file and returns both dataframes
+def read_dataframes():
+    reviews = pd.read_json('data/reviews.json', lines=True)
+    metadata = pd.read_json('data/metadata.json', lines=True)
+    
 
+    return reviews, metadata
 
 
 
 
 def main():
+    
+    # Reads the dataframes
+    reviews, metadata = read_dataframes()
+    
+    # Change the dataframe to be ready to Solr
+    
+    # Go through each metadata row and add the review to the metadata
+    metadata['review'] = metadata['asin'].apply(lambda x: reviews[reviews['asin'] == x])
+    
+    metadata.to_json('data/solr_data.json', orient='records', lines=True)
+    
+    # Create an 'id' column from 'asin' column
+    metadata.rename(columns={'asin': 'id'}, inplace=True)
+    
     return
-
-
 
 
 
