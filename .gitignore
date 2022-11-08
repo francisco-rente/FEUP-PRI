@@ -3,7 +3,8 @@
 *.csv
 *.json
 datasets.tar.gz
-
+!metadata_schema.json
+!reviews_schema.json
 
 #idea 
 **/.idea/*

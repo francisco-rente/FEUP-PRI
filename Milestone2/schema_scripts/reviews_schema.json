@@ -1,0 +1,120 @@
+{
+	"add-field-type": [
+        {
+            "name":"text",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            }
+        },
+        {
+            "name":"keyword",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.KeyWordTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.RemoveDuplicatesTokenFilterFactory"},
+                    {"class": "solr.ClassicFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.KeyWordTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"},
+                    {"class":"solr.RemoveDuplicatesTokenFilterFactory"},
+                    {"class": "solr.ClassicFilterFactory"}
+                ]
+            }
+
+        },
+        {
+            "name":"date",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.ClassicTokenizerFactory"
+                },
+                "filters":[]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.ClassicTokenizerFactory"
+                },
+                "filters":[]
+            }
+
+        }
+        
+    ],
+    "add-field": [
+        {
+            "name": "reviewerID",
+            "type": "keyword",
+            "indexed": false
+        },
+        {
+            "name": "reviewText",
+            "type": "text",
+            "indexed": true
+        },
+        {
+            "name": "summary",
+            "type": "text",
+            "indexed": true
+        },
+        {
+            "name": "unixReviewTime",
+            "type": "pint",
+            "indexed": true
+        },
+        {
+            "name": "reviewTime",
+            "type": "date",
+            "indexed": false
+        },
+        {
+            "name": "helpful_ratio",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name": "visualization",
+            "type": "pint",
+            "indexed": true
+        },
+        {
+            "name": "overall",
+            "type": "pfloat",
+            "indexed": false
+        },
+        {
+            "name": "reviewerName",
+            "type": "keyword",
+            "indexed": true
+        }
+
+
+    ]
+}
