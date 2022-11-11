@@ -1,0 +1,104 @@
+{
+    "add-field": [
+        {
+            "name": "title",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "type",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "brand",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "category",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "publication_date",
+            "type": "pdate",
+            "indexed": false
+        },
+        {
+            "name": "no_pages",
+            "type": "pint",
+            "indexed": false
+
+        },
+        {
+            "name": "price",
+            "type": "pfloat",
+            "indexed": false
+
+        },
+        {
+            "name": "description",
+            "type": "string",
+            "indexed": false
+        },
+        {
+            "name": "imgUrl",
+            "type": "string",
+            "indexed": false
+        },
+        {
+            "name": "overall",
+            "type": "pfloat",
+            "indexed": false
+        }, 
+        {
+            "name":"asin",
+            "type":"string",
+            "indexed":true,
+            "stored":true,
+            "multiValued":false
+        },
+        {
+            "name": "reviewerID",
+            "type": "string",
+            "indexed": false
+        },
+        {
+            "name": "reviewText",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "summary",
+            "type": "string",
+            "indexed": true
+        },
+        {
+            "name": "unixReviewTime",
+            "type": "pint",
+            "indexed": true
+        },
+        {
+            "name": "reviewTime",
+            "type": "pdate",
+            "indexed": false
+        },
+        {
+            "name": "helpful_ratio",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name": "visualization",
+            "type": "pint",
+            "indexed": true
+        },
+        {
+            "name": "reviewerName",
+            "type": "string",
+            "indexed": true
+        }
+
+    ]
+}

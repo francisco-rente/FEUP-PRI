@@ -5,6 +5,7 @@
 datasets.tar.gz
 !metadata_schema.json
 !reviews_schema.json
+!analyserless_schema.json
 
 #idea 
 **/.idea/*

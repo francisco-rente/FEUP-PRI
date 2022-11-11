@@ -1,0 +1,159 @@
+{
+    "add-field-type": [
+        {
+            "name":"text",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class":"solr.LowerCaseFilterFactory"}
+                ]
+            }
+        },
+        {
+            "name":"body",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.ClassicTokenizerFactory"
+                },
+                "filters":[
+                    {"class": "solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class": "solr.LowerCaseFilterFactory"},
+                    {"class": "solr.ClassicFilterFactory"}, 
+                    {"class": "solr.StopFilterFactory", "words":"en_stopwords.txt"}, 
+                    {"class": "solr.PorterStemFilterFactory"}, 
+                    {"class": "solr.SynonymGraphFilterFactory", "synonyms":"mysynonyms.txt"},
+                    {"class": "solr.RemoveDuplicatesTokenFilterFactory"},
+                    {"class": "solr.FlattenGraphFilterFactory"}
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.ClassicTokenizerFactory"
+                },
+                "filters":[
+                    {"class": "solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
+                    {"class": "solr.LowerCaseFilterFactory"},
+                    {"class": "solr.ClassicFilterFactory"}, 
+                    {"class": "solr.StopFilterFactory", "words":"en_stopwords.txt"}, 
+                    {"class": "solr.PorterStemFilterFactory"}, 
+                    {"class": "solr.SynonymGraphFilterFactory", "synonyms":"mysynonyms.txt"}, 
+                    {"class": "solr.RemoveDuplicatesTokenFilterFactory"}, 
+                    {"class": "solr.FlattenGraphFilterFactory"}
+                ]
+            }
+        }
+        
+    ],
+
+    "add-field": [
+        {
+            "name": "title",
+            "type": "text",
+            "indexed": true
+        },
+        {
+            "name": "type",
+            "type": "string",
+            "indexed": true
+        },
+        
+        {
+            "name": "brand",
+            "type": "text",
+            "indexed": true
+        },
+        {
+            "name": "category",
+            "type": "text",
+            "indexed": true
+        },
+        {
+            "name": "publication_date",
+            "type": "pdate",
+            "indexed": true
+        },
+        {
+            "name": "no_pages",
+            "type": "pint",
+            "indexed": true
+
+        },
+        {
+            "name": "price",
+            "type": "pfloat",
+            "indexed": false
+
+        },
+        {
+            "name": "description",
+            "type": "body",
+            "indexed": true
+        },
+        {
+            "name": "imgUrl",
+            "type": "string",
+            "indexed": false
+        },
+        {
+            "name": "overall",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name":"asin",
+            "type":"string",
+            "indexed":true,
+            "stored":true,
+            "multiValued":false
+        },
+        {
+            "name": "reviewerID",
+            "type": "string",
+            "indexed": false
+        },
+        {
+            "name": "reviewText",
+            "type": "body",
+            "indexed": true
+        },
+        {
+            "name": "summary",
+            "type": "body",
+            "indexed": true
+        },
+        {
+            "name": "reviewTime",
+            "type": "pdate",
+            "indexed": false
+        },
+        {
+            "name": "helpful_ratio",
+            "type": "pfloat",
+            "indexed": true
+        },
+        {
+            "name": "visualization",
+            "type": "pint",
+            "indexed": true
+        },
+        {
+            "name": "reviewerName",
+            "type": "text",
+            "indexed": true
+        }
+    ]
+}
