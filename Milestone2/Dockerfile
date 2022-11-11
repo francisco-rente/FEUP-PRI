@@ -15,7 +15,6 @@ COPY /schema_scripts/mysynonyms.txt /schema_scripts/mysynonyms.txt
 # Copy stopwords
 COPY /schema_scripts/en_stopwords.txt /schema_scripts/en_stopwords.txt
 
-
 #Copy the startup script
 COPY startup.sh /scripts/startup.sh
 

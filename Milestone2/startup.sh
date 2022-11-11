@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Pre create the core
 precreate-core kindle
 
