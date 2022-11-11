@@ -1,74 +1,13 @@
 {
-	"add-field-type": [
-        {
-            "name":"text",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.StandardTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"}
-                ]
-            }
-        },
-        {
-            "name":"keyword",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.KeyWordTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.RemoveDuplicatesTokenFilterFactory"},
-                    {"class": "solr.ClassicFilterFactory"}
-                ]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.KeyWordTokenizerFactory"
-                },
-                "filters":[
-                    {"class":"solr.ASCIIFoldingFilterFactory", "preserveOriginal":true},
-                    {"class":"solr.LowerCaseFilterFactory"},
-                    {"class":"solr.RemoveDuplicatesTokenFilterFactory"},
-                    {"class": "solr.ClassicFilterFactory"}
-                ]
-            }
-
-        },
-        {
-            "name":"date",
-            "class":"solr.TextField",
-            "indexAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.ClassicTokenizerFactory"
-                },
-                "filters":[]
-            },
-            "queryAnalyzer":{
-                "tokenizer":{
-                    "class":"solr.ClassicTokenizerFactory"
-                },
-                "filters":[]
-            }
-
-        }
-        
-    ],
     "add-field": [
+
+        {
+            "name":"asin",
+            "type":"string",
+            "indexed":true,
+            "stored":true,
+            "multiValued":false
+        },
         {
             "name": "reviewerID",
             "type": "keyword",
@@ -105,13 +44,8 @@
             "indexed": true
         },
         {
-            "name": "overall",
-            "type": "pfloat",
-            "indexed": false
-        },
-        {
             "name": "reviewerName",
-            "type": "keyword",
+            "type": "string",
             "indexed": true
         }
 

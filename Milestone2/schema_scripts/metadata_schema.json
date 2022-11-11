@@ -75,8 +75,14 @@
             "indexed": true
         },
         {
-            "name": "brand",
+            "name": "type",
             "type": "keyword",
+            "indexed": true
+        },
+        
+        {
+            "name": "brand",
+            "type": "string",
             "indexed": true
         },
         {
