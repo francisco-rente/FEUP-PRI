@@ -42,6 +42,11 @@ def main():
     reviews.to_json('data/solr_reviews.json', orient='records', lines=True)
     
 
+    metadata_sample = metadata.sample(n=7000)
+    reviews_sample = reviews.sample(n=7000)
+
+    metadata_sample.to_json('data/solr_sampled_metadata.json', orient='records', lines=True)
+    reviews_sample.to_json('data/solr_sampled_reviews.json', orient='records', lines=True)
     return
 
 

@@ -1,5 +1,5 @@
 great,fantast,amaz,like,excel, superb,positi,good => good 
-holidai,vacat,voyag,trip,break =>  break
+holidai,vacat,voyag,trip => vacat
 dull,lifeless,monoton,tediou,bore =>  boring
-heavi,hard,harsh,strenuou,tough,difficult => difficult
+heavi,hard,strenuou,tough,difficult => difficult
 lengthi,endless,long => long
