@@ -1,8 +1,52 @@
 {
+    "add-field-type": [
+        {
+            "name":"text",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.StandardTokenizerFactory"
+                },
+                "filters":[
+
+                ]
+            }
+        },
+        {
+            "name":"body",
+            "class":"solr.TextField",
+            "indexAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.ClassicTokenizerFactory"
+                },
+                "filters":[
+
+                ]
+            },
+            "queryAnalyzer":{
+                "tokenizer":{
+                    "class":"solr.ClassicTokenizerFactory"
+                },
+                "filters":[
+
+                ]
+            }
+        }
+        
+    ],
+
     "add-field": [
         {
             "name": "title",
-            "type": "string",
+            "type": "text",
             "indexed": true
         },
         {
@@ -10,25 +54,26 @@
             "type": "string",
             "indexed": true
         },
+        
         {
             "name": "brand",
-            "type": "string",
+            "type": "text",
             "indexed": true
         },
         {
             "name": "category",
-            "type": "string",
+            "type": "text",
             "indexed": true
         },
         {
             "name": "publication_date",
             "type": "pdate",
-            "indexed": false
+            "indexed": true
         },
         {
             "name": "no_pages",
             "type": "pint",
-            "indexed": false
+            "indexed": true
 
         },
         {
@@ -39,8 +84,8 @@
         },
         {
             "name": "description",
-            "type": "string",
-            "indexed": false
+            "type": "body",
+            "indexed": true
         },
         {
             "name": "imgUrl",
@@ -50,8 +95,8 @@
         {
             "name": "overall",
             "type": "pfloat",
-            "indexed": false
-        }, 
+            "indexed": true
+        },
         {
             "name":"asin",
             "type":"string",
@@ -66,17 +111,12 @@
         },
         {
             "name": "reviewText",
-            "type": "string",
+            "type": "body",
             "indexed": true
         },
         {
             "name": "summary",
-            "type": "string",
-            "indexed": true
-        },
-        {
-            "name": "unixReviewTime",
-            "type": "pint",
+            "type": "body",
             "indexed": true
         },
         {
@@ -96,9 +136,8 @@
         },
         {
             "name": "reviewerName",
-            "type": "string",
+            "type": "text",
             "indexed": true
         }
-
     ]
 }
