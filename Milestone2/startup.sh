@@ -17,12 +17,12 @@ cp /schema_scripts/en_stopwords.txt /var/solr/data/sampled_kindle
 
 
 curl -X POST -H 'Content-type:application/json' \
-    --data-binary @/schema_scripts/kindle_schema.json \
+    --data-binary @/schema_scripts/analyserless_schema.json \
     http://localhost:8983/solr/kindle/schema
 
 
 curl -X POST -H 'Content-type:application/json' \
-    --data-binary @/schema_scripts/kindle_schema.json \
+    --data-binary @/schema_scripts/analyserless_schema.json \
     http://localhost:8983/solr/sampled_kindle/schema
 
 # Populate collection

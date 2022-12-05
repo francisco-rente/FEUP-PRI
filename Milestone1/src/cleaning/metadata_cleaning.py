@@ -51,7 +51,7 @@ def reorganize_data(data_frame):
     data_frame = data_frame.rename(columns={'description_y': 'description'})
     data_frame = data_frame.rename(columns={'price_y': 'price'})
 
-    return data_frame[['asin', 'title', 'brand', 'category', 'publication_date', 'no_pages', 'description', 'price', 'imgUrl', 'overall']]
+    return data_frame[['asin', 'title', 'brand', 'category', 'publication_date', 'no_pages', 'description', 'price', 'imgUrl', 'overall', 'rank']]
 
 
 def trim_data(data_frame):
@@ -69,8 +69,12 @@ def transform_data(data_frame):
         lambda x: ast.literal_eval(x)[2] if len(ast.literal_eval(x)) > 2 else ast.literal_eval(x)[0])
     data_frame['category'] = data_frame['category'].apply(lambda x: 'unknown' if '<a' in x else x)
     data_frame['category'] = data_frame['category'].apply(lambda x: str(x).replace('&amp;', '&'))
-    # data_frame['rank'] = data_frame['rank'].apply(
-    #    lambda rank_string: int(rank_string.split(' ')[0].replace(',', '')) if rank_string else np.nan)
+        
+    data_frame['rank'] = data_frame['rank'].apply(
+        lambda rank_string: int(rank_string.split(' ')[0].replace(',', '')) if type(rank_string) is str and rank_string!="[]" else np.nan)
+    data_frame['rank'] = data_frame['rank'].apply(lambda x: -1 if x < 0 or x==np.nan else x)
+    
+
     data_frame['brand'] = data_frame['brand'].apply(lambda x: str(x).replace('Visit Amazon\'s ', ''))
     data_frame['brand'] = data_frame['brand'].apply(lambda x: str(x).replace(' Page', ''))
     data_frame['brand'] = data_frame['brand'].apply(lambda x: 'unknown' if x == 'nan' else x)
