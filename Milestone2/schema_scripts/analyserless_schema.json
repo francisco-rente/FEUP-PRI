@@ -98,6 +98,12 @@
             "indexed": true
         },
         {
+            "name": "rank",
+            "type": "pfloat",
+            "indexed": true
+
+        },
+        {
             "name":"asin",
             "type":"string",
             "indexed":true,
