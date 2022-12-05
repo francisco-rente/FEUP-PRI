@@ -43,7 +43,6 @@ anyways
 anywhere
 apart
 appear
-appreciate
 appropriate
 are
 aren't
@@ -57,7 +56,6 @@ associated
 at
 available
 away
-awfully
 back
 backward
 backwards
@@ -142,9 +140,6 @@ eighty
 either
 else
 elsewhere
-end
-ending
-enough
 entirely
 especially
 et
@@ -199,7 +194,6 @@ had
 hadn't
 half
 happens
-hardly
 has
 hasn't
 have
@@ -279,8 +273,6 @@ less
 lest
 let
 let's
-like
-liked
 likely
 likewise
 little
@@ -329,7 +321,6 @@ need
 needn't
 needs
 neither
-never
 neverf
 neverless
 nevertheless
@@ -346,7 +337,6 @@ noone
 no-one
 nor
 normally
-not
 nothing
 notwithstanding
 novel
@@ -359,7 +349,6 @@ often
 oh
 ok
 okay
-old
 on
 once
 one
@@ -542,7 +531,6 @@ underneath
 undoing
 unfortunately
 unless
-unlike
 unlikely
 until
 unto
