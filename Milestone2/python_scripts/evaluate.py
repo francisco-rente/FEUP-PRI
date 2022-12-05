@@ -22,23 +22,23 @@ from itertools import cycle
 
 QRELS_FILE = [
     "query_qrel/query1.txt",
-    "query_qrel/query2.txt", 
+    #"query_qrel/query2.txt", 
     "query_qrel/query3.txt",
     "query_qrel/query4.txt"
     
 ]
 queries =[ 
     (1, "http://localhost:8983/solr/kindle/select?indent=true&q.op=OR&q=brand%3A%20Francis&rows=10&sort=overall%20desc"), #query 1
-    (2, "http://localhost:8983/solr/kindle/select?defType=dismax&fq=no_pages%3A%5B0%20TO%20150%5D&indent=true&q.op=OR&q=soccer%20football&qf=title%20brand%20description&sort=no_pages%20asc"), #query 2
+    #(2, "http://localhost:8983/solr/kindle/select?defType=dismax&fq=no_pages%3A%5B0%20TO%20150%5D&indent=true&q.op=OR&q=soccer%20football&qf=title%20brand%20description&sort=no_pages%20asc"), #query 2
     (3, "http://localhost:8983/solr/kindle/select?defType=edismax&fq=%7B!join%20from%3Did%20to%3Dasin%7Dbrand%3A%22Dr.%20Leland%20Benton%22&fq=overall%3A%5B4.0%20TO%20*%5D&indent=true&q.op=OR&q=good&qf=reviewText%20%20summary&qs=1&rows=20&sort=visualization%20desc%20%2Chelpful_ratio%20desc"), #query 3
-    (4, "http://localhost:8983/solr/sampled_kindle/select?defType=edismax&fq=type%3A%22review%22%20reviewTime%3A%5B2013-6-1T00%3A00%3A00Z%20TO%202013-8-31T00%3A00%3A00Z%5D&indent=true&q.op=OR&q=%22vacation%20read%22&qf=reviewText%20%20summary&qs=1&rows=12&sort=helpful_ratio%20desc%2C%20visualization%20desc"), #query 4
+    (4, "http://localhost:8983/solr/kindle/select?defType=edismax&fq=type%3A%22review%22%20reviewTime%3A%5B2013-6-1T00%3A00%3A00Z%20TO%202013-8-31T00%3A00%3A00Z%5D&indent=true&q.op=OR&q=%22vacation%20read%22&qf=reviewText%20%20summary&qs=1&rows=12&sort=helpful_ratio%20desc%2C%20visualization%20desc"), #query 4
 ]
 
 queries_boosted = [
     (1, "http://localhost:8983/solr/kindle/select?indent=true&q.op=OR&q=brand%3A%20Francis&rows=10&sort=overall%20desc"), #query 1
-    (2, "http://localhost:8983/solr/sampled_kindle/select?defType=dismax&fq=no_pages%3A%5B0%20TO%20150%5D&indent=true&q.op=OR&q=soccer%20football&qf=title%5E2%20brand%20description&sort=no_pages%20asc"), #query 2
+    #(2, "http://localhost:8983/solr/kindle/select?defType=dismax&fq=no_pages%3A%5B0%20TO%20150%5D&indent=true&q.op=OR&q=soccer%20football&qf=title%5E2%20brand%20description&sort=no_pages%20asc"), #query 2
     (3, "http://localhost:8983/solr/kindle/select?defType=edismax&fq=%7B!join%20from%3Did%20to%3Dasin%7Dbrand%3A%22Dr.%20Leland%20Benton%22&fq=overall%3A%5B4.0%20TO%20*%5D&indent=true&q.op=OR&q=good&qf=reviewText%5E1%20%20summary%5E2&qs=1&rows=10&sort=visualization%20desc%20%2Chelpful_ratio%20desc"), #query 3
-    (4, "http://localhost:8983/solr/sampled_kindle/select?defType=edismax&fq=type%3A%22review%22%20reviewTime%3A%5B2013-6-1T00%3A00%3A00Z%20TO%202013-8-31T00%3A00%3A00Z%5D&indent=true&q.op=OR&q=%22vacation%20read%22&qf=reviewText%5E1.3%20%20summary%5E1.7&qs=1&rows=12&sort=helpful_ratio%20desc%2C%20visualization%20desc"), #query 4
+    (4, "http://localhost:8983/solr/kindle/select?defType=edismax&fq=type%3A%22review%22%20reviewTime%3A%5B2013-6-1T00%3A00%3A00Z%20TO%202013-8-31T00%3A00%3A00Z%5D&indent=true&q.op=OR&q=%22vacation%20read%22&qf=reviewText%5E1.3%20%20summary%5E1.7&qs=1&rows=12&sort=helpful_ratio%20desc%2C%20visualization%20desc"), #query 4
 ]
 
 
@@ -55,8 +55,13 @@ SCHEMA = 1  # 1 if using schema, 0 if filterless, -1 if creating graphs
 def process_query(index: int, q_type: str, query_file: str, query_url: str):
     # Read qrels to extract relevant documents
     relevant = list(map(lambda el: el.strip(), open(query_file).readlines()))
+    print(relevant)
     # Get query results from Solr instance
     results = requests.get(query_url).json()['response']['docs']
+    
+    #return results that are relevant
+    relevant_results = list(filter(lambda el: el['id'] in relevant, results))
+    print(relevant_results)
 
 
     # METRICS TABLE
@@ -132,7 +137,7 @@ def process_query(index: int, q_type: str, query_file: str, query_url: str):
         len([
             doc for doc in results[:idx]
             if doc['id'] in relevant
-        ]) / len(relevant)
+        ]) / len(relevant_results)
         for idx, _ in enumerate(results, start=1)
     ]
 
@@ -154,7 +159,10 @@ def process_query(index: int, q_type: str, query_file: str, query_url: str):
             if idx > 0 and recall_values[idx-1] in precision_recall_match:
                 precision_recall_match[step] = precision_recall_match[recall_values[idx-1]]
             else:
-                precision_recall_match[step] = precision_recall_match[recall_values[idx+2]]
+                for kok in range(idx+1, len(recall_values)):
+                    if recall_values[i] in precision_recall_match:
+                        precision_recall_match[step] = precision_recall_match[recall_values[kok]]
+                        break;
 
     disp = PrecisionRecallDisplay(precision=[precision_recall_match.get(r) for r in recall_values], recall=recall_values)
     disp.plot()
