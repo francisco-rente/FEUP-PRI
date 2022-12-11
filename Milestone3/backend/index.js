@@ -22,6 +22,7 @@ const server = app.listen(8000, function () {
 })
 
 app.post('/', async (req, res) => {
+    console.log(req.body.url);
     const url = req.body.url;
     const solr_response = await axios.get(url); // send request to solr
     res.send(solr_response.data); // send solr response to frontend
