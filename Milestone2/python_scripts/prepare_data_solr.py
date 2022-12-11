@@ -18,6 +18,7 @@ def read_dataframes():
     
     reviews['reviewTime'] = pd.to_datetime(reviews['reviewTime'], format='%m %d, %Y').dt.strftime('%Y-%m-%dT%H:%M:%SZ')
     metadata['publication_date'] = pd.to_datetime(metadata['publication_date'], format='%Y-%m-%d').dt.strftime('%Y-%m-%dT%H:%M:%SZ')
+    metadata['title'] = metadata['title'].str.replace('- Kindle edition', '')
     
     reviews.drop(['unixReviewTime'], axis=1, inplace=True)
     
