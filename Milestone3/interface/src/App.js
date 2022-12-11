@@ -109,7 +109,13 @@ const Results = () => {
     return (
         <div className="flex flex-col">
             {books.map((book) => (
-                <div className="flex flex-row">
+                <div className="flex flex-row"
+                    onClick = {() => {
+                        // open new tab 
+                        window.open("http://www.amazon.com/exec/obidos/ASIN/" + book.id);
+                    }}
+
+                >
                     <div className="w-1/3">
                         <img src={book.imgUrl
                             ? book.imgUrl
