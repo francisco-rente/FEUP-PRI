@@ -10,6 +10,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 let books = [];
 let numFound = 0;
 let current_url = "";
+let facets = [];
 const proxy = "http://127.0.0.1:8000/"
 
 
@@ -68,13 +69,37 @@ async function searchRequest(event) {
     const response = await axios.post(proxy, json_body, {headers: headers});
     books = response.data.response.docs;
     numFound = response.data.response.numFound;
+
+    const facets_body = {"url": url + "&facet=true&facet.field=brand&facet.field=category&facet.field=overall"}
+    const facets_response = await axios.post(proxy, facets_body, {headers: headers});
+    const retrieved_facets = facets_response.data.facet_counts.facet_fields["category"];
+    
+    facets = [];
+    for (let i = 0; i < retrieved_facets.length; i++) {
+        if(retrieved_facets[i+1])
+        facets.push({"facet": retrieved_facets[i], "num": retrieved_facets[i+1]});
+        i += 1;
+    }
+
     root.render(<App />);
 }
 
 
 const Filters = () => {
-    return (
-        <div> FILTERS </div>
+   // filter are facets
+   return (
+         <div className="flex flex-col">
+            <h1 className="text-2xl font-bold">Filters</h1>
+            <div className="flex flex-col">
+                {facets.map((facet) => (
+                    <div className="flex flex-row">
+                        <p className="text-sm">{facet.facet}</p>
+                        <p className="text-sm"> ({facet.num})</p>
+                        <input type="checkbox" id={facet.facet} name={facet.facet} value={facet.facet} />
+                    </div>
+                ))}
+            </div>
+        </div>
     );
 }
 
@@ -82,7 +107,7 @@ const Filters = () => {
 const Results = () => {
     console.log(books);
     return (
-        <div>
+        <div className="flex flex-col">
             {books.map((book) => (
                 <div className="flex flex-row">
                     <div className="w-1/3">
