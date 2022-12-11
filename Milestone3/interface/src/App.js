@@ -10,15 +10,24 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 let books = [];
 let numFound = 0;
 let current_url = "";
+let current_filter = "";
 let facets = [];
+let previous_searchs = "";
 const proxy = "http://127.0.0.1:8000/"
 
-
+function getQuerryTermFromURL(url){
+    let query_terms = url.split("q=")[1].split("%3A")[0]
+    return decodeURIComponent(query_terms)
+}
 
 function App() {
     return (
         <>
-            <div className="w-full">
+            <div className="w-full"
+                onClick={() => {
+                    window.location.href = "http://localhost:3000";
+                }}
+            >
                 <h1 className="text-7xl m-12 font-sans font-bold">
                     KindleMe<span className="text-[#ff9900]">Some</span>{" "}
                     <FaAmazon className="inline text-[#ff9900]"/>
@@ -45,12 +54,15 @@ function App() {
 
 
 function createURL() {
-    const default_url = "http://localhost:8983/solr/kindle/select?defType=edismax&fq=type%3Abook&indent=true&q.op=OR&qf=title&q=";
+    const default_url = "http://localhost:8983/solr/kindle/select?defType=edismax&indent=true&q.op=OR&qf=title&q=";
 
     const search_value = document.getElementById("default-search").value;
     
-    if (search_value === "") return null;
+    if (search_value === "") {
+        return default_url + "*";
+    }
     
+
     const query = encodeURIComponent(search_value);
     const query_url = default_url + query;
     current_url = query_url;
@@ -58,28 +70,47 @@ function createURL() {
 }
 
 
-
-
 async function searchRequest(event) {
     event.preventDefault()
-    const url = createURL();
+    let url = createURL();
     if (!url) return null;
+
+    // if filter is active 
+
+    url +="&fq=type%3Abook";
+    let current_search = document.getElementById("default-search").value == "" ? '*' :  document.getElementById("default-search").value 
+
+    if(previous_searchs === current_search){
+        if(facets.some((facet) => facet.checked)){
+            for (let filter of facets){
+                if(filter.checked){
+                    console.log(filter.facet);
+                    url += "%2C%20category%3A" + filter.facet;
+                }
+            }
+        }
+    }
+
+
     const json_body = {"url": url}
     const headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
     const response = await axios.post(proxy, json_body, {headers: headers});
     books = response.data.response.docs;
     numFound = response.data.response.numFound;
-
-    const facets_body = {"url": url + "&facet=true&facet.field=brand&facet.field=category&facet.field=overall"}
-    const facets_response = await axios.post(proxy, facets_body, {headers: headers});
-    const retrieved_facets = facets_response.data.facet_counts.facet_fields["category"];
     
-    facets = [];
-    for (let i = 0; i < retrieved_facets.length; i++) {
-        if(retrieved_facets[i+1])
-        facets.push({"facet": retrieved_facets[i], "num": retrieved_facets[i+1]});
-        i += 1;
-    }
+
+    if(previous_searchs !== current_search){
+        const facets_body = {"url": url + "&facet=true&facet.field=brand&facet.field=category&facet.field=overall"}
+        const facets_response = await axios.post(proxy, facets_body, {headers: headers});
+        const retrieved_facets = facets_response.data.facet_counts.facet_fields["category"];
+        facets = [];
+        for (let i = 0; i < retrieved_facets.length; i++) {
+            if(retrieved_facets[i+1])
+            facets.push({"facet": retrieved_facets[i], "num": retrieved_facets[i+1], "checked": false});
+            i += 1;
+        }
+        previous_searchs = current_search;
+    }   
 
     root.render(<App />);
 }
@@ -95,7 +126,13 @@ const Filters = () => {
                     <div className="flex flex-row">
                         <p className="text-sm">{facet.facet}</p>
                         <p className="text-sm"> ({facet.num})</p>
-                        <input type="checkbox" id={facet.facet} name={facet.facet} value={facet.facet} />
+                        <input type="checkbox" id={facet.facet} name={facet.facet} value={facet.facet}
+                        
+                        onClick = {() => {
+                            facet.checked = !facet.checked;
+                        }}
+                        
+                        />
                     </div>
                 ))}
             </div>
