@@ -9,13 +9,18 @@ var ReactDOM = require('react-dom');
 const root = ReactDOM.createRoot(document.getElementById('root'));
 let books = [];
 let numFound = 0;
+
 let current_url = "";
-let current_filter = "";
 let facets = [];
 let previous_searchs = "";
+
+let previous_cursor = ["*"];
+let current_cursor = "*";
+let next_cursor = "*";
+
 const proxy = "http://127.0.0.1:8000/"
 
-function getQuerryTermFromURL(url){
+function getQueryTermFromURL(url){
     let query_terms = url.split("q=")[1].split("%3A")[0]
     return decodeURIComponent(query_terms)
 }
@@ -37,6 +42,11 @@ function App() {
                 <div className="container">
                     <SearchBar/>
                     <div className="flex">
+                        <div> 
+                            numFound: {numFound}
+                        </div>
+                    </div>
+                    <div className="flex">
                         <div
                             className="w-1/3 mr-12 p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <Filters/>
@@ -44,6 +54,14 @@ function App() {
                         <div
                             className="h-36 w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <Results/>
+                        </div>
+                
+                        <div class="flex flex-col">
+                            <BackPageButton/>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <NextPageButton/>
                         </div>
                     </div>
                 </div>
@@ -54,7 +72,9 @@ function App() {
 
 
 function createURL() {
-    const default_url = "http://localhost:8983/solr/kindle/select?defType=edismax&indent=true&q.op=OR&qf=title&q=";
+    console.log("creating url: " + current_cursor);
+
+    const default_url = "http://localhost:8983/solr/kindle/select?defType=edismax&rows=5&sort=id%20asc&cursorMark=" + current_cursor + "&indent=true&q.op=OR&qf=title&q=";
 
     const search_value = document.getElementById("default-search").value;
     
@@ -90,14 +110,26 @@ async function searchRequest(event) {
             }
         }
     }
+    else {
+        previous_cursor = ["*"];
+        next_cursor = "*";
+        current_cursor = "*";
+        facets = [];
+    }
+
 
 
     const json_body = {"url": url}
     const headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
     const response = await axios.post(proxy, json_body, {headers: headers});
+    console.log(response)
+
     books = response.data.response.docs;
     numFound = response.data.response.numFound;
-    
+    next_cursor = response.data.nextCursorMark;
+
+    console.log("previous_cursor: ", previous_cursor, "current_cursor: ", current_cursor, "next_cursor: ", next_cursor);
+
 
     if(previous_searchs !== current_search){
         const facets_body = {"url": url + "&facet=true&facet.field=brand&facet.field=category&facet.field=overall"}
@@ -105,7 +137,7 @@ async function searchRequest(event) {
         const retrieved_facets = facets_response.data.facet_counts.facet_fields["category"];
         facets = [];
         for (let i = 0; i < retrieved_facets.length; i++) {
-            if(retrieved_facets[i+1])
+            if(retrieved_facets[i+1] == 0) break;
             facets.push({"facet": retrieved_facets[i], "num": retrieved_facets[i+1], "checked": false});
             i += 1;
         }
@@ -126,10 +158,14 @@ const Filters = () => {
                     <div className="flex flex-row">
                         <p className="text-sm">{facet.facet}</p>
                         <p className="text-sm"> ({facet.num})</p>
-                        <input type="checkbox" id={facet.facet} name={facet.facet} value={facet.facet}
+                        <input type="checkbox" id={facet.facet} name={facet.facet}
                         
-                        onClick = {() => {
+                        onClick = {(event) => {
+                            // console.log(event.target.checked, facet.checked);
+                            // Change the state of input checkbox
+                            // console.log(event.target);
                             facet.checked = !facet.checked;
+                            // event.target["checked"] = facet.checked;
                         }}
                         
                         />
@@ -216,6 +252,39 @@ const SearchBar = () => {
                 </button>
             </div>
         </form>
+    );
+}
+
+
+
+const BackPageButton = () => {
+    return (
+        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+            onClick = {(event) => {
+                next_cursor = current_cursor;
+                if(previous_cursor.length !== 1) current_cursor = previous_cursor.pop();
+                searchRequest(event);
+            }}
+        >
+            <span>Back</span>
+        </button>
+    );
+}
+
+
+
+
+const NextPageButton = () => {
+    return (
+        <button class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+            onClick = {(event) => {
+                previous_cursor.push(current_cursor);
+                current_cursor = next_cursor;
+                searchRequest(event);
+            }}
+        >
+            <span>Next</span>
+        </button>
     );
 }
 
