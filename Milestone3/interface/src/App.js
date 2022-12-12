@@ -34,7 +34,7 @@ function App() {
 
     function createFetchURL() {
         const default_url = url + "select?defType=edismax&rows=5&sort=id%20asc&cursorMark=" + cursors.current_cursor + "&indent=true&q.op=OR&qf=title&hl=on&hl.fl=title&q=";
-    
+
         const search_value = bookInput
         
         if (search_value === "") {
@@ -83,8 +83,13 @@ function App() {
 
         axios.post(proxy, json_body, {headers: headers}).then((response) => {
             console.log(response)
-    
-            setBooks(response.data.response.docs);
+            let highlight = response.data.highlighting;
+            let books = response.data.response.docs;
+            for (let i = 0; i < books.length; i++) {
+                books[i].title = highlight[books[i].id].title[0];
+            }
+
+            setBooks(books);
             setNumFound(response.data.response.numFound);
             console.log(response.data.nextCursorMark);
             let temp_cursors = cursors 

@@ -18,10 +18,12 @@ const Results = (props) => {
                                 : "https://via.placeholder.com/150"} alt="book cover"/>
                         </div>
                         <div className="w-2/3">
-                            <h1 className="text-2xl font-bold">{book.title}</h1>
+                            <h1 className="text-2xl font-bold" 
+                                dangerouslySetInnerHTML={{__html: book.title}} 
+                                ></h1>
                             <h2 className="text-lg font-bold">{book.brand}</h2>
                             <p className="text-sm">{book.description}</p>
-                            <p className="text-sm">{book.price ? book.price : -1}</p>
+                            <p className="text-sm">{book.price ? book.price : "NaN"}</p>
                             {
                                 [...Array(Math.floor(book.overall))].map(
                                     (e, i) => <i key={i} className="fas fa-star"></i>
