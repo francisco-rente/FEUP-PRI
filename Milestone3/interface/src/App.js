@@ -56,6 +56,7 @@ function App() {
         url +="&fq=type%3Abook";
         let current_search = bookInput ? document.getElementById("default-search").value :  '*'
         
+        
 
         if(previous_searchs === current_search){
             console.log("same search");
@@ -77,19 +78,21 @@ function App() {
             setFacets([]);
         }
     
-    
+        
+        console.log(url);
         const json_body = {"url": url}
         const headers = {'Content-Type': 'application/json', 'Accept': 'application/json'};
 
         axios.post(proxy, json_body, {headers: headers}).then((response) => {
             console.log(response)
             let highlight = response.data.highlighting;
-            let books = response.data.response.docs;
+            let books_temp = response.data.response.docs;
+            console.log("RESULTS" + books);
             for (let i = 0; i < books.length; i++) {
-                books[i].title = highlight[books[i].id].title[0];
+                books_temp[i].title = highlight[books_temp[i].id].title[0];
             }
 
-            setBooks(books);
+            setBooks(books_temp);
             setNumFound(response.data.response.numFound);
             console.log(response.data.nextCursorMark);
             let temp_cursors = cursors 
