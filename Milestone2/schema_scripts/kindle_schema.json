@@ -36,7 +36,6 @@
                     {"class": "solr.StopFilterFactory", "words":"en_stopwords.txt"}, 
                     {"class": "solr.PorterStemFilterFactory"}, 
                     {"class": "solr.SynonymGraphFilterFactory", "synonyms":"mysynonyms.txt"},
-                    {"class": "solr.RemoveDuplicatesTokenFilterFactory"},
                     {"class": "solr.FlattenGraphFilterFactory"}
                 ]
             },
@@ -51,7 +50,6 @@
                     {"class": "solr.StopFilterFactory", "words":"en_stopwords.txt"}, 
                     {"class": "solr.PorterStemFilterFactory"}, 
                     {"class": "solr.SynonymGraphFilterFactory", "synonyms":"mysynonyms.txt"}, 
-                    {"class": "solr.RemoveDuplicatesTokenFilterFactory"}, 
                     {"class": "solr.FlattenGraphFilterFactory"}
                 ]
             }
