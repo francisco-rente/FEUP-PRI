@@ -16,6 +16,10 @@ Read more about it in the [project report](./Milestone3/docs/Milestone_3__T06G02
     - Searching for books by specific authors.
     - Filtering books based on content length and topic.
     - Retrieving reviews based on specific sentiments (e.g., positive reviews, vacation reading recommendations). 
+- Faceted search for filtering search results.
+- Cursor-based pagination for handling large result sets.
+- Suggestion for auto-completion of search queries (Fuzzy search).
+- Highlighting of search terms in the search results.
 - Performance evaluation using standard information retrieval metrics (e.g., Mean Average Precision, Recall, Precision).
 - React frontend for user interaction with the search engine.
 
@@ -42,6 +46,10 @@ Data was gathered from two different datasets:
 
 
 ## Images 
+
+### Architecture
+
+![Architecture](./assets/architecture_diagram.png)
 
 ### Original Data Exploration pipeline
 
